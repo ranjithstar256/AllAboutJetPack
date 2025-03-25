@@ -118,8 +118,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComposeUIComponentsShowcase() {
@@ -786,6 +784,8 @@ fun ComposeUIComponentsShowcase() {
         }
     }
 }
+
+
 @Composable
 fun SectionTitle(title: String) {
     Text(

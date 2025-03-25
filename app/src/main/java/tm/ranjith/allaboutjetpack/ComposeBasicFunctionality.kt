@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,7 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -32,6 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import tm.ranjith.allaboutjetpack.ui.theme.AllAboutJetPackTheme
 
 class ComposeBasicFunctionality : ComponentActivity() {
@@ -45,29 +51,33 @@ class ComposeBasicFunctionality : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     // Our main composable function with basic functionality examples
-                    ComposeBasicFunctionality()
+                    //ComposeBasicFunctionality()
+                    StartPage()
                 }
             }
         }
     }
 
-    @Composable
+
+     @Composable
     fun ComposeBasicFunctionality() {
         // This is a scrollable column that will contain all our examples
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .height(300.dp)
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
             Text(
                 text = "Compose Basic Functionality",
                 style = MaterialTheme.typography.headlineMedium
             )
 
-            Divider()
+            HorizontalDivider()
 
             // EXAMPLE 1: Basic State Management
             Text(
@@ -95,7 +105,7 @@ class ComposeBasicFunctionality : ComponentActivity() {
                 }
             }
 
-            Divider()
+            HorizontalDivider()
 
             // EXAMPLE 2: Text Input and Display
             Text(
@@ -106,21 +116,21 @@ class ComposeBasicFunctionality : ComponentActivity() {
             // State for storing user input
             var userInput by remember { mutableStateOf("") }
 
-            // Text field for user input
+            //  Text field for user input
             OutlinedTextField(
                 value = userInput,
                 onValueChange = { userInput = it },
                 label = { Text("Enter some text") },
                 modifier = Modifier.fillMaxWidth()
             )
-
+            //  LanguageSelector()
             // Display what the user has typed
             Text(
                 text = "You typed: $userInput",
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            Divider()
+            HorizontalDivider()
 
             // EXAMPLE 3: Form with Validation
             Text(
@@ -247,7 +257,7 @@ class ComposeBasicFunctionality : ComponentActivity() {
                 }
             }
 
-            Divider()
+            HorizontalDivider()
 
             // EXAMPLE 4: Derived State
             Text(
@@ -295,7 +305,7 @@ class ComposeBasicFunctionality : ComponentActivity() {
                 modifier = Modifier.padding(vertical = 16.dp)
             )
 
-            Divider()
+            HorizontalDivider()
 
             // EXAMPLE 5: Toggle Visibility
             Text(
@@ -338,5 +348,118 @@ class ComposeBasicFunctionality : ComponentActivity() {
             // Extra space at the bottom
             Spacer(modifier = Modifier.height(32.dp))
         }
+
+
+
     }
+
+
+
+    @Composable
+    fun StartPage() {
+
+        val navController = rememberNavController()
+
+
+        NavHost(
+            navController = navController,
+            startDestination ="startpage"
+        ) {
+            composable("startpage"){
+                starthere(navController)
+            }
+            composable("signup"){
+                SignupPage(navController)
+            }
+            composable("signin/{x}/{y}"){
+                backStackEntry ->
+                val valone = backStackEntry.arguments?.getString("x")
+                val valtwo = backStackEntry.arguments?.getString("y")
+
+
+                SignInPage(navController,valone,valtwo)
+            }
+        }
+
+
+    }
+
+
+    @Composable
+    fun starthere(navController: NavHostController){
+        Column(
+            modifier = Modifier
+                .fillMaxSize().background(Color.Magenta)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Welcome to the Start Page!",
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    navController.navigate("signup")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("go to sign up page")
+            }
+        }
+    }
+
+
+    @Composable
+    fun SignupPage(navController: NavHostController) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize().background(Color.Yellow)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Welcome to the \n Signup Page!",
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    navController.navigate("signin/jaison/kerala")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("go to sign in page")
+            }
+        }
+    }
+
+
+    @Composable
+    fun SignInPage(navController: NavHostController, valone: String?, valtwo: String?) {
+        Column (modifier = Modifier
+            .fillMaxSize().background(Color.Blue)
+            .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(text = "Sign In Page $valone $valtwo", color = Color.White, fontSize = 32.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    navController.navigate("startpage")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("go to start page")
+            }
+        }
+    }
+
+
 }
